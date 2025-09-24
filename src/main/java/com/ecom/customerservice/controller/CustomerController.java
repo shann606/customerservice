@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +27,7 @@ import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.util.GenderEnum;
 
+import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -67,6 +69,14 @@ class CustomerController {
 		CustomersDTO.CustomerDTO customer = customerService.findByid(id);
 		return ResponseEntity.ok(customer);
 
+	}
+	
+	@GetMapping("/getrecommendations")
+	ResponseEntity<?> getRecommendations(@RequestParam(name = "customerId" ,required = true) UUID customerId, @RequestParam(name = "productItemid" , required = true) UUID productItemId) throws Exception {
+		return null;
+		
+		
+		
 	}
 
 	private CustomersDTO getData() {
