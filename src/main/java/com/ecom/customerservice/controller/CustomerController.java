@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +22,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.ecom.customerservice.dto.AddressDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
+import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.util.GenderEnum;
 
-import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,7 +43,7 @@ class CustomerController {
 	@PostMapping("/createcustomer")
 	ResponseEntity<CustomersDTO.CustomerDTO> saveCustomer(@RequestBody CustomersDTO.CustomerDTO customer)
 			throws Exception {
-        log.info("getting users "+ customer.toString());
+		log.info("getting users " + customer.toString());
 		CustomersDTO.CustomerDTO customer1 = customerService.saveCustomer(customer);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/customers/{id}")
@@ -70,13 +68,16 @@ class CustomerController {
 		return ResponseEntity.ok(customer);
 
 	}
-	
+
 	@GetMapping("/getrecommendations")
-	ResponseEntity<?> getRecommendations(@RequestParam(name = "customerId" ,required = true) UUID customerId, @RequestParam(name = "productItemid" , required = true) UUID productItemId) throws Exception {
-		return null;
-		
-		
-		
+	ResponseEntity<CustomerRecommendationDTO> getRecommendations(
+			@RequestParam(name = "customerId", required = true) UUID customerId,
+			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception {
+
+		;
+
+		return ResponseEntity.ok(customerService.findCustomerProduct(customerId, productItemId));
+
 	}
 
 	private CustomersDTO getData() {

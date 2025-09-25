@@ -5,10 +5,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
+import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.entity.Customer;
 import com.ecom.customerservice.mapper.CustomMapper;
 import com.ecom.customerservice.repository.CustomerRepository;
@@ -25,20 +30,25 @@ public class CustomerService {
 	@Autowired
 	CustomMapper cMapper;
 
+	@Autowired
+	RestTemplate restTemplate;
+	@Value("${online.recomm.products}")
+	private String productURL;
+
 	public CustomerDTO saveCustomer(CustomerDTO customer) throws Exception {
 		// TODO Auto-generated method stub
-      try {
-		Customer cus =customerRepo.saveAndFlush(cMapper.toCustomerEntity(customer));
-		return cMapper.toCustomerDTO(cus);
-      }catch (Exception e) {
-		// TODO: handle exception
-    	  e.printStackTrace();
-    	  throw e;
-	}
+		try {
+			Customer cus = customerRepo.saveAndFlush(cMapper.toCustomerEntity(customer));
+			return cMapper.toCustomerDTO(cus);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw e;
+		}
 
 	}
 
-	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception{
+	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception {
 		// TODO Auto-generated method stub
 
 		List<Customer> cus = customerRepo.findAll();
@@ -46,10 +56,33 @@ public class CustomerService {
 		return cMapper.toListCustomerDTO(cus);
 	}
 
-	public CustomerDTO findByid(UUID id) throws Exception{
+	public CustomerDTO findByid(UUID id) throws Exception {
 		// TODO Auto-generated method stub
 		Optional<Customer> customer = customerRepo.findById(id);
 		return cMapper.toCustomerDTO(customer.get());
+	}
+
+	public CustomerRecommendationDTO findCustomerProduct(UUID customerId, UUID productItemId) throws Exception {
+		// TODO Auto-generated method stub
+
+		Customer customers = customerRepo.findById(customerId).get();
+
+		CustomerRecommendationDTO cust = cMapper.toCustomerRecommendationDTO(customers);
+
+		List<CustomerRecommendationDTO.ProductsDTO> details = getProductsData(productItemId);
+		cust.setProds(details);
+
+		return cust;
+	}
+
+	private List<CustomerRecommendationDTO.ProductsDTO> getProductsData(UUID productItemId) throws Exception {
+		
+		log.info("gettting url "+ productURL);
+
+		return restTemplate.exchange(productURL + productItemId, HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<CustomerRecommendationDTO.ProductsDTO>>() {
+				}).getBody();
+
 	}
 
 }
