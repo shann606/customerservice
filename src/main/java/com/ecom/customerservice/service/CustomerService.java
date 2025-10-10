@@ -5,15 +5,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
-import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.entity.Customer;
 import com.ecom.customerservice.mapper.CustomMapper;
 import com.ecom.customerservice.repository.CustomerRepository;
@@ -29,11 +25,16 @@ public class CustomerService {
 
 	@Autowired
 	CustomMapper cMapper;
-
+	
 	@Autowired
-	RestTemplate restTemplate;
+	private CustomerServiceFeignClient feignClient;
+
+/*	@Autowired
+	RestTemplate restTemplate; 
 	@Value("${online.recomm.products}")
-	private String productURL;
+	public  String productURL;
+	
+	*/
 
 	public CustomerDTO saveCustomer(CustomerDTO customer) throws Exception {
 		// TODO Auto-generated method stub
@@ -77,11 +78,14 @@ public class CustomerService {
 
 	private List<CustomerRecommendationDTO.ProductsDTO> getProductsData(UUID productItemId) throws Exception {
 		
-		log.info("gettting url "+ productURL);
+		return feignClient.getRecommendedProducts(productItemId);
 
+		/*
 		return restTemplate.exchange(productURL + productItemId, HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<CustomerRecommendationDTO.ProductsDTO>>() {
 				}).getBody();
+				
+				*/
 
 	}
 
