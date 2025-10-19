@@ -26,7 +26,6 @@ import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.util.GenderEnum;
 
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Shan
@@ -34,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/v1/customers")
-@Slf4j
+
 class CustomerController {
 
 	@Autowired
@@ -43,7 +42,7 @@ class CustomerController {
 	@PostMapping("/createcustomer")
 	ResponseEntity<CustomersDTO.CustomerDTO> saveCustomer(@RequestBody CustomersDTO.CustomerDTO customer)
 			throws Exception {
-		log.info("getting users " + customer.toString());
+		//log.info("getting users " + customer.toString());
 		CustomersDTO.CustomerDTO customer1 = customerService.saveCustomer(customer);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/customers/{id}")
