@@ -1,9 +1,5 @@
 package com.ecom.customerservice.dto;
 
-import java.util.List;
-
-import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

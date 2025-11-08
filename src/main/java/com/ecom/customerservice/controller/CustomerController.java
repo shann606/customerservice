@@ -26,7 +26,6 @@ import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.util.GenderEnum;
 
-
 /**
  * Shan
  */
@@ -36,13 +35,17 @@ import com.ecom.customerservice.util.GenderEnum;
 
 class CustomerController {
 
-	@Autowired
 	CustomerService customerService;
+
+	@Autowired
+	public CustomerController(CustomerService customerService) {
+		this.customerService = customerService;
+	}
 
 	@PostMapping("/createcustomer")
 	ResponseEntity<CustomersDTO.CustomerDTO> saveCustomer(@RequestBody CustomersDTO.CustomerDTO customer)
 			throws Exception {
-		//log.info("getting users " + customer.toString());
+
 		CustomersDTO.CustomerDTO customer1 = customerService.saveCustomer(customer);
 
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/customers/{id}")
@@ -73,21 +76,19 @@ class CustomerController {
 			@RequestParam(name = "customerId", required = true) UUID customerId,
 			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception {
 
-		;
-
 		return ResponseEntity.ok(customerService.findCustomerProduct(customerId, productItemId));
 
 	}
 
 	private CustomersDTO getData() {
 
-		List<AddressDTO> list = new ArrayList<AddressDTO>();
-		List<CustomersDTO.CustomerDTO> cus = new ArrayList<CustomersDTO.CustomerDTO>();
+		List<AddressDTO> list = new ArrayList<>();
+		List<CustomersDTO.CustomerDTO> cus = new ArrayList<>();
 		AddressDTO address = AddressDTO.builder().addr1("1445 Gillford Apt").addr2("kallis drive").city("Santa Clara")
 				.country("USA").zipcode("95498").id(UUID.randomUUID()).build();
 		list.add(address);
 		CustomersDTO.CustomerDTO customer = CustomersDTO.CustomerDTO.builder().id(UUID.randomUUID()).firtName("David")
-				.lastName("Mark").name("Peter").age(45).gender(GenderEnum.Male).address(list).build();
+				.lastName("Mark").name("Peter").age(45).gender(GenderEnum.MALE).address(list).build();
 		cus.add(customer);
 
 		return CustomersDTO.builder().customers(cus).build();

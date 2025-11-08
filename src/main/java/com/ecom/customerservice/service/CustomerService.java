@@ -20,29 +20,28 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomerService {
 
-	@Autowired
-	CustomerRepository customerRepo;
+	private CustomerRepository customerRepo;
 
-	@Autowired
-	CustomMapper cMapper;
-	
-	@Autowired
+	private CustomMapper cMapper;
+
 	private CustomerServiceFeignClient feignClient;
 
-/*	@Autowired
-	RestTemplate restTemplate; 
-	@Value("${online.recomm.products}")
-	public  String productURL;
-	
-	*/
+	@Autowired
+	public CustomerService(CustomerRepository customerRepo, CustomMapper cMapper,
+			CustomerServiceFeignClient feignClient) {
+		this.customerRepo = customerRepo;
+		this.cMapper = cMapper;
+		this.feignClient = feignClient;
+
+	}
 
 	public CustomerDTO saveCustomer(CustomerDTO customer) throws Exception {
-		// TODO Auto-generated method stub
+
 		try {
 			Customer cus = customerRepo.saveAndFlush(cMapper.toCustomerEntity(customer));
 			return cMapper.toCustomerDTO(cus);
 		} catch (Exception e) {
-			// TODO: handle exception
+
 			e.printStackTrace();
 			throw e;
 		}
@@ -50,7 +49,6 @@ public class CustomerService {
 	}
 
 	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception {
-		// TODO Auto-generated method stub
 
 		List<Customer> cus = customerRepo.findAll();
 
@@ -58,15 +56,14 @@ public class CustomerService {
 	}
 
 	public CustomerDTO findByid(UUID id) throws Exception {
-		// TODO Auto-generated method stub
+
 		Optional<Customer> customer = customerRepo.findById(id);
-		return cMapper.toCustomerDTO(customer.get());
+		return cMapper.toCustomerDTO(customer.orElseThrow());
 	}
 
 	public CustomerRecommendationDTO findCustomerProduct(UUID customerId, UUID productItemId) throws Exception {
-		// TODO Auto-generated method stub
 
-		Customer customers = customerRepo.findById(customerId).get();
+		Customer customers = customerRepo.findById(customerId).orElseThrow();
 
 		CustomerRecommendationDTO cust = cMapper.toCustomerRecommendationDTO(customers);
 
@@ -77,15 +74,8 @@ public class CustomerService {
 	}
 
 	private List<CustomerRecommendationDTO.ProductsDTO> getProductsData(UUID productItemId) throws Exception {
-		
-		return feignClient.getRecommendedProducts(productItemId);
 
-		/*
-		return restTemplate.exchange(productURL + productItemId, HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<CustomerRecommendationDTO.ProductsDTO>>() {
-				}).getBody();
-				
-				*/
+		return feignClient.getRecommendedProducts(productItemId);
 
 	}
 
