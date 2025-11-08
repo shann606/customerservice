@@ -1,9 +1,7 @@
 package com.ecom.customerservice.dto;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.UUID;
-
-import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddressDTO {
+public class AddressDTO implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4609616454860296130L;
 	
 	private UUID id;
 	private UUID customerId;

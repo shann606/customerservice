@@ -12,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalException {
-	
+public class GlobalException extends RuntimeException {
+
+	private static final long serialVersionUID = 1419004875388975146L;
+
 	@ExceptionHandler(exception = Exception.class)
 	private ResponseEntity<ExceptionDTO> handleException(Exception ex) {
 		

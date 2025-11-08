@@ -1,13 +1,10 @@
 package com.ecom.customerservice.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -55,7 +52,7 @@ class CustomerControllerTest {
 				.country("USA").zipcode("95498").id(UUID.randomUUID()).build();
 		list.add(address);
 		customer = CustomersDTO.CustomerDTO.builder().id(UUID.fromString("b516f577-11da-424e-9ad0-bc23ab15df1b"))
-				.firtName("David").lastName("Mark").name("Peter").age(45).gender(GenderEnum.Male).address(list).build();
+				.firtName("David").lastName("Mark").name("Peter").age(45).gender(GenderEnum.MALE).address(list).build();
 		cus.add(customer);
 
 	}

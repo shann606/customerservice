@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.ecom.customerservice.util.GenderEnum;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
