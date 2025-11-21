@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.ecom.customerservice.dto.AddressDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
+import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.service.CustomerService;
-import com.ecom.customerservice.util.GenderEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

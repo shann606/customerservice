@@ -1,4 +1,4 @@
-package com.ecom.customerservice.util;
+package com.ecom.customerservice.dto;
 
 public enum GenderEnum {
 	

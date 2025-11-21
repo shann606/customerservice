@@ -21,11 +21,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 
+import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.entity.Address;
 import com.ecom.customerservice.entity.Customer;
 import com.ecom.customerservice.mapper.CustomMapper;
 import com.ecom.customerservice.repository.CustomerRepository;
-import com.ecom.customerservice.util.GenderEnum;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest

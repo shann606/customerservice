@@ -3,7 +3,7 @@ package com.ecom.customerservice.entity;
 import java.util.List;
 import java.util.UUID;
 
-import com.ecom.customerservice.util.GenderEnum;
+import com.ecom.customerservice.dto.GenderEnum;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
