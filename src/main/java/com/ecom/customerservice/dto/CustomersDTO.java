@@ -3,8 +3,6 @@ package com.ecom.customerservice.dto;
 import java.util.List;
 import java.util.UUID;
 
-import com.ecom.customerservice.util.GenderEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

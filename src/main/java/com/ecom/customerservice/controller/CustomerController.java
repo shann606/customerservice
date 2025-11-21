@@ -21,10 +21,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ecom.customerservice.dto.AddressDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
+import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.service.CustomerService;
-import com.ecom.customerservice.util.GenderEnum;
+import com.ecom.customerservice.util.AesEncryptionUtil;
 
 /**
  * Shan
@@ -59,6 +60,7 @@ class CustomerController {
 	ResponseEntity<CustomersDTO> getCustomers() throws Exception {
 
 		List<CustomerDTO> customer = customerService.getUsers();
+		System.out.println("printing key =="+ AesEncryptionUtil.generateKey());
 
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
 	}

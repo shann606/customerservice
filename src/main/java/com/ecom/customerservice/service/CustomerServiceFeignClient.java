@@ -11,10 +11,11 @@ import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 
 @FeignClient(name = "productservice")
 public interface CustomerServiceFeignClient {
-	
 
-	
 	@GetMapping("api/v1/products/recommendation/{productItemId}")
-	List<CustomerRecommendationDTO.ProductsDTO> getRecommendedProducts(@PathVariable  UUID productItemId);
+	String getRecommendedProductsAsString(@PathVariable UUID productItemId);
+
+	@GetMapping("api/v1/products/recommendation/{productItemId}")
+	List<CustomerRecommendationDTO.ProductsDTO> getRecommendedProducts(@PathVariable UUID productItemId);
 
 }
