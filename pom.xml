@@ -31,6 +31,7 @@
 		<java.version>17</java.version>
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<logstash.version>8.0</logstash.version>
+		<jib-build-plugin>3.5.1</jib-build-plugin>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -158,6 +159,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<layers>
+						<enabled>true</enabled>
+
+					</layers>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -166,6 +171,26 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>${jib-build-plugin}</version>
+				<configuration>
+					<to>
+						<image>${artifactId}:latest</image>
+					</to>
+					<container>
+						<ports>
+							<port>8081</port>
+						</ports>
+						<environment>
+							<SPRING_PROFILES_ACTIVE>local-secure</SPRING_PROFILES_ACTIVE>
+						</environment>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>
+					</container>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
