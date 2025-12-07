@@ -4,6 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import feign.Capability;
+import feign.micrometer.MicrometerCapability;
+import io.micrometer.core.instrument.MeterRegistry;
+
 @Configuration
 public class AppConfig {
 
@@ -12,5 +16,10 @@ public class AppConfig {
 
 		return new RestTemplate();
 	}
+	
+	@Bean
+    public Capability capability(MeterRegistry meterRegistry) {
+        return new MicrometerCapability(meterRegistry);
+    }
 
 }
