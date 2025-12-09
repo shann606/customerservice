@@ -62,6 +62,8 @@ public class CustomerService {
 
 	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception {
 
+		log.info("Getting the users details");		
+		
 		List<Customer> cus = customerRepo.findAll();
 
 		return cMapper.toListCustomerDTO(cus);
