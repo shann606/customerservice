@@ -27,15 +27,14 @@
                         {
                         "severity": "%level",
                         "service": "${springAppName:-}",
-                        "trace": "%X{X-B3-TraceId:-}",
-                        "span": "%X{X-B3-SpanId:-}",
+                        "traceId": "%X{traceId:-}",
+                        "spanId": "%X{spanId:-}",
                         "parent": "%X{X-B3-ParentSpanId:-}",
                         "exportable": "%X{X-Span-Export:-}",
                         "baggage": "%X{key:-}",
                         "pid": "${PID:-}",
                         "thread": "%thread",
-                        "class": "%logger{40}",
-                        "rest": "%message"
+                        "class": "%logger{40}"
                         }
                     </pattern>
                 </pattern>
