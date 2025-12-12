@@ -24,7 +24,7 @@ public class CustomersDTO {
 
 		private UUID id;
 		private String name;
-		private int age;
+		private Integer age;
 		private String firtName;
 		private String lastName;
 		private GenderEnum gender;

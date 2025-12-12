@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import com.ecom.customerservice.dto.CustomerRecommendationDTO;
@@ -110,6 +112,33 @@ public class CustomerService {
 		}
 		return result;
 
+	}
+
+	
+	/**
+	 * Using Query by example method
+	 * 
+	 * @param name
+	 * @param firstName
+	 * @return
+	 */
+	public List<CustomersDTO.CustomerDTO> findByUserName(String name, String firstName) {
+
+		log.info("Getting the name & firstname " + name + "--firstname--" + firstName);
+
+		Customer probe = new Customer();
+		probe.setName(name);
+		probe.setFirtName(firstName);
+
+		ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name", match -> match.startsWith().ignoreCase())
+
+				.withMatcher("firtName", match -> match.startsWith().ignoreCase());
+
+		Example<Customer> example = Example.of(probe, matcher);
+
+		List<Customer> cus = customerRepo.findAll(example);
+
+		return cMapper.toListCustomerDTO(cus);
 	}
 
 }
