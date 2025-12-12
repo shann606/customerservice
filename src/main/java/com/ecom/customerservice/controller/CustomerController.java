@@ -72,6 +72,17 @@ class CustomerController {
 		return ResponseEntity.ok(customer);
 
 	}
+	
+	
+	@GetMapping("/getcustomer")
+	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true)  String name,
+			          								  @RequestParam(name = "firstname", required = true) String firstName) throws Exception {
+		
+		List<CustomerDTO> customer =customerService.findByUserName(name,firstName);
+		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
+		 
+	 }
+	
 
 	@GetMapping("/getrecommendations")
 	ResponseEntity<CustomerRecommendationDTO> getRecommendations(

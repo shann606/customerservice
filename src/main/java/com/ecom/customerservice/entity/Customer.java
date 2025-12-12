@@ -30,7 +30,7 @@ public class Customer {
 	@Column(name = "id" , nullable = false)
 	private UUID id;
 	private String name;
-	private int age;
+	private Integer age;
 	private String firtName;
 	private String lastName;
 	private GenderEnum gender;
