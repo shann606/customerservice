@@ -42,10 +42,13 @@ public class AesEncryptionUtil {
         System.arraycopy(iv, 0, encrypted, 0, iv.length);
         System.arraycopy(cipherText, 0, encrypted, iv.length, cipherText.length);
 
-        return Base64.getEncoder().encodeToString(encrypted);
+        return "$"+Base64.getEncoder().encodeToString(encrypted);
     }
 
     public static String decrypt(String encryptedBase64, String secretKeyBase64) throws Exception {
+    	encryptedBase64=encryptedBase64.substring(1);
+    	
+    
         byte[] encryptedBytes = Base64.getDecoder().decode(encryptedBase64);
 
         byte[] keyBytes = Base64.getDecoder().decode(secretKeyBase64);

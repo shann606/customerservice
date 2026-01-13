@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -37,8 +38,6 @@ public class CustomerService {
 
 	@Value("${crypto.secret-key}")
 	private String secretKey;
-
-	private ObjectMapper obj;
 
 	@Autowired
 	public CustomerService(CustomerRepository customerRepo, CustomMapper cMapper,
@@ -64,8 +63,8 @@ public class CustomerService {
 
 	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception {
 
-		log.info("Getting the users details");		
-		
+		log.info("Getting the users details");
+
 		List<Customer> cus = customerRepo.findAll();
 
 		return cMapper.toListCustomerDTO(cus);
@@ -92,17 +91,19 @@ public class CustomerService {
 	private List<CustomerRecommendationDTO.ProductsDTO> getProductsData(UUID productItemId) throws Exception {
 
 		List<CustomerRecommendationDTO.ProductsDTO> result;
+		ObjectMapper obj;
 
 		if (!secretKey.isBlank()) {
-
+			obj = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 			String data = feignClient.getRecommendedProductsAsString(productItemId);
 			log.info(" inner service is called as secure channel before decrypt" + data);
+			if (data.startsWith("$")) {
+				data = decrypt(data, secretKey);
+			} else {
+				throw new Exception("Downstream application is down please try later....");
 
-			data = decrypt(data, secretKey);
-
+			}
 			log.info(" inner service is called as secure channel after decrypt" + data);
-
-			obj = JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
 			result = obj.readValue(data, new TypeReference<List<CustomerRecommendationDTO.ProductsDTO>>() {
 			});
@@ -114,7 +115,6 @@ public class CustomerService {
 
 	}
 
-	
 	/**
 	 * Using Query by example method
 	 * 
@@ -139,6 +139,85 @@ public class CustomerService {
 		List<Customer> cus = customerRepo.findAll(example);
 
 		return cMapper.toListCustomerDTO(cus);
+	}
+
+	
+	@Transactional
+	public CustomerDTO updateCustomer(UUID customerId, CustomerDTO customer) throws Exception {
+
+		customerRepo.findById(customerId).orElseThrow();
+		customer.setId(customerId);
+
+		Customer cust = cMapper.toCustomerEntity(customer);
+
+		Customer cust1 = customerRepo.saveAndFlush(cust);
+
+		return cMapper.toCustomerDTO(cust1);
+	}
+
+	@Transactional
+	public CustomerDTO patchCustomerData(UUID customerId, CustomerDTO customer) throws Exception {
+
+		Customer cust = customerRepo.findById(customerId).orElseThrow();
+
+		// patching customer data
+
+		if (customer.getName() != null) {
+			cust.setName(customer.getName());
+		}
+		if (customer.getFirtName() != null) {
+			cust.setFirtName(customer.getFirtName());
+		}
+		if (customer.getLastName() != null) {
+			cust.setLastName(customer.getLastName());
+		}
+		if (customer.getAge() != null) {
+			cust.setAge(customer.getAge());
+		}
+		if (customer.getGender() != null) {
+			cust.setGender(customer.getGender());
+		}
+		// patching address data
+
+		customer.getAddress().stream().forEach((s) -> {
+
+			cust.getAddress().stream().filter(x -> x.getId().equals(s.getId())).forEach((y) -> {
+
+				if (s.getAddr1() != null) {
+					y.setAddr1(s.getAddr1());
+				}
+				if (s.getAddr2() != null) {
+					y.setAddr2(s.getAddr2());
+				}
+				if (s.getCity() != null) {
+					y.setCity(s.getCity());
+				}
+				if (s.getState() != null) {
+					y.setState(s.getState());
+				}
+				if (s.getCountry() != null) {
+					y.setCountry(s.getCountry());
+				}
+				if (s.getZipcode() != null) {
+					y.setZipcode(s.getZipcode());
+				}
+
+			});
+
+		});
+
+		Customer cust1 = customerRepo.save(cust);
+
+		return cMapper.toCustomerDTO(cust1);
+	}
+
+	public String deleteCustomer(UUID id) throws Exception {
+
+		customerRepo.findById(id).orElseThrow();
+
+		customerRepo.deleteById(id);
+
+		return "Successfully deleted";
 	}
 
 }

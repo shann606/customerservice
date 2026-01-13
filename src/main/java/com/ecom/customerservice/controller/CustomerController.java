@@ -9,10 +9,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,7 +65,7 @@ class CustomerController {
 	ResponseEntity<CustomersDTO> getCustomers() throws Exception {
 
 		List<CustomerDTO> customer = customerService.getUsers();
-		System.out.println("printing key =="+ AesEncryptionUtil.generateKey());
+		System.out.println("printing key ==" + AesEncryptionUtil.generateKey());
 
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
 	}
@@ -72,17 +77,15 @@ class CustomerController {
 		return ResponseEntity.ok(customer);
 
 	}
-	
-	
+
 	@GetMapping("/getcustomer")
-	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true)  String name,
-			          								  @RequestParam(name = "firstname", required = true) String firstName) throws Exception {
-		
-		List<CustomerDTO> customer =customerService.findByUserName(name,firstName);
+	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true) String name,
+			@RequestParam(name = "firstname", required = true) String firstName) throws Exception {
+
+		List<CustomerDTO> customer = customerService.findByUserName(name, firstName);
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
-		 
-	 }
-	
+
+	}
 
 	@GetMapping("/getrecommendations")
 	ResponseEntity<CustomerRecommendationDTO> getRecommendations(
@@ -93,6 +96,29 @@ class CustomerController {
 
 	}
 
+	@PutMapping("/updatecustomer")
+	ResponseEntity<CustomerDTO> updateCustomer(@RequestParam(name = "id", required = true) UUID customerId,
+			@RequestBody CustomerDTO customer) throws Exception {
+
+		return new ResponseEntity<>(customerService.updateCustomer(customerId, customer), HttpStatus.ACCEPTED);
+
+	}
+
+	@PatchMapping("/patchcustomer")
+	ResponseEntity<CustomerDTO> patchCustomer(@RequestParam(name = "id", required = true) UUID customerId,
+			@RequestBody CustomerDTO customer) throws Exception {
+
+		return new ResponseEntity<>(customerService.patchCustomerData(customerId, customer), HttpStatus.ACCEPTED);
+	}
+	
+	
+	@DeleteMapping("/deletecustomer/{id}")
+	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id) throws Exception {
+
+		return new ResponseEntity<>(customerService.deleteCustomer(id), HttpStatus.NO_CONTENT);
+	}
+
+	
 	private CustomersDTO getData() {
 
 		List<AddressDTO> list = new ArrayList<>();
