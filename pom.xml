@@ -32,6 +32,7 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<logstash.version>8.0</logstash.version>
 		<jib-build-plugin>3.5.1</jib-build-plugin>
+		<eh-cache>3.10.0</eh-cache>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -125,6 +126,22 @@
 	        <groupId>org.springframework.cloud</groupId>
 	        <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 	    </dependency>
+	    <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<classifier>jakarta</classifier>
+			<version>${eh-cache}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+	    
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
