@@ -8,6 +8,9 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,7 @@ public class CustomerService {
 
 	}
 
-	public CustomerDTO saveCustomer(CustomerDTO customer) throws Exception {
+	public CustomerDTO saveCustomer(CustomerDTO customer) {
 
 		try {
 			Customer cus = customerRepo.saveAndFlush(cMapper.toCustomerEntity(customer));
@@ -61,7 +64,8 @@ public class CustomerService {
 
 	}
 
-	public List<CustomersDTO.CustomerDTO> getUsers() throws Exception {
+    @CacheEvict(cacheNames = "customers" , allEntries = true)
+	public List<CustomersDTO.CustomerDTO> getUsers() {
 
 		log.info("Getting the users details");
 
@@ -70,15 +74,17 @@ public class CustomerService {
 		return cMapper.toListCustomerDTO(cus);
 	}
 
-	public CustomerDTO findByid(UUID id) throws Exception {
+	@Cacheable(cacheNames = "customers", key = "#id", cacheManager = "cacheManager")
+	public CustomerDTO findByid(UUID id) {
 
+		log.info("are we hitting the database ::");
 		Optional<Customer> customer = customerRepo.findById(id);
 		return cMapper.toCustomerDTO(customer.orElseThrow());
 	}
 
 	public CustomerRecommendationDTO findCustomerProduct(UUID customerId, UUID productItemId) throws Exception {
 
-		Customer customers = customerRepo.findById(customerId).orElseThrow();
+		Customer customers = customerRepo.findById(customerId).orElseThrow(() -> new Exception("id not found"));
 
 		CustomerRecommendationDTO cust = cMapper.toCustomerRecommendationDTO(customers);
 
@@ -141,10 +147,10 @@ public class CustomerService {
 		return cMapper.toListCustomerDTO(cus);
 	}
 
-	
 	@Transactional
+	@CachePut(cacheNames = "customers", key = "#customerId", cacheManager = "cacheManager")
 	public CustomerDTO updateCustomer(UUID customerId, CustomerDTO customer) throws Exception {
-
+		log.info("Update calling for customer");
 		customerRepo.findById(customerId).orElseThrow();
 		customer.setId(customerId);
 
@@ -156,7 +162,7 @@ public class CustomerService {
 	}
 
 	@Transactional
-	public CustomerDTO patchCustomerData(UUID customerId, CustomerDTO customer) throws Exception {
+	public CustomerDTO patchCustomerData(UUID customerId, CustomerDTO customer) {
 
 		Customer cust = customerRepo.findById(customerId).orElseThrow();
 
@@ -211,7 +217,7 @@ public class CustomerService {
 		return cMapper.toCustomerDTO(cust1);
 	}
 
-	public String deleteCustomer(UUID id) throws Exception {
+	public String deleteCustomer(UUID id) {
 
 		customerRepo.findById(id).orElseThrow();
 
