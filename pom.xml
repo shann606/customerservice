@@ -33,6 +33,7 @@
 		<logstash.version>8.0</logstash.version>
 		<jib-build-plugin>3.5.1</jib-build-plugin>
 		<eh-cache>3.10.0</eh-cache>
+		<swagger-v>2.8.14</swagger-v>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -140,6 +141,12 @@
 		<dependency>
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${swagger-v}</version>
 		</dependency>
 	    
 	</dependencies>

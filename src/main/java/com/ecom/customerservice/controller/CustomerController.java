@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +24,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ecom.customerservice.dto.AddressDTO;
-import com.ecom.customerservice.dto.CustomersDTO;
-import com.ecom.customerservice.dto.GenderEnum;
-import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 import com.ecom.customerservice.dto.CustomerRecommendationDTO;
+import com.ecom.customerservice.dto.CustomersDTO;
+import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
+import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.util.AesEncryptionUtil;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 /**
  * Shan
@@ -49,6 +51,11 @@ class CustomerController {
 	}
 
 	@PostMapping("/createcustomer")
+	@Operation(description = "Creating Customer", responses = { @ApiResponse(responseCode = "400",description = "Bad Request" ),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomersDTO.CustomerDTO> saveCustomer(@RequestBody CustomersDTO.CustomerDTO customer)
 			throws Exception {
 
@@ -62,6 +69,12 @@ class CustomerController {
 	}
 
 	@GetMapping("/allcustomers")
+	@Operation(description = "Getting all the customers", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomersDTO> getCustomers() throws Exception {
 
 		List<CustomerDTO> customer = customerService.getUsers();
@@ -71,6 +84,12 @@ class CustomerController {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(description = "Getting single customer by id", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomersDTO.CustomerDTO> getUser(@PathVariable("id") UUID id) throws Exception {
 
 		CustomersDTO.CustomerDTO customer = customerService.findByid(id);
@@ -79,6 +98,12 @@ class CustomerController {
 	}
 
 	@GetMapping("/getcustomer")
+	@Operation(description = "Getting customer by name", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true) String name,
 			@RequestParam(name = "firstname", required = true) String firstName) throws Exception {
 
@@ -88,6 +113,12 @@ class CustomerController {
 	}
 
 	@GetMapping("/getrecommendations")
+	@Operation(description = "Getting recommendation of products for the customer", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomerRecommendationDTO> getRecommendations(
 			@RequestParam(name = "customerId", required = true) UUID customerId,
 			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception {
@@ -97,6 +128,12 @@ class CustomerController {
 	}
 
 	@PutMapping("/updatecustomer")
+	@Operation(description = "Updating a customer", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomerDTO> updateCustomer(@RequestParam(name = "id", required = true) UUID customerId,
 			@RequestBody CustomerDTO customer) throws Exception {
 
@@ -105,20 +142,30 @@ class CustomerController {
 	}
 
 	@PatchMapping("/patchcustomer")
+	@Operation(description = "Patching customer", responses = { @ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<CustomerDTO> patchCustomer(@RequestParam(name = "id", required = true) UUID customerId,
 			@RequestBody CustomerDTO customer) throws Exception {
 
 		return new ResponseEntity<>(customerService.patchCustomerData(customerId, customer), HttpStatus.ACCEPTED);
 	}
-	
-	
+
 	@DeleteMapping("/deletecustomer/{id}")
+
+	@Operation(description = "Deleting a Customer", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
+			@ApiResponse(responseCode = "200", description = "Success")
+
+	})
 	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id) throws Exception {
 
 		return new ResponseEntity<>(customerService.deleteCustomer(id), HttpStatus.NO_CONTENT);
 	}
 
-	
 	private CustomersDTO getData() {
 
 		List<AddressDTO> list = new ArrayList<>();

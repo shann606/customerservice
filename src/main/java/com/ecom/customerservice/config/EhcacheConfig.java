@@ -32,9 +32,10 @@ public class EhcacheConfig {
                                         )
                                 )
                         );
-
+        
+        
+   
         cacheManager.createCache("customers", config);
-
         return cacheManager;
 		
 
