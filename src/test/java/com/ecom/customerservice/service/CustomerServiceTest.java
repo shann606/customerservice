@@ -20,6 +20,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.test.annotation.DirtiesContext;
 
 import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.entity.Address;
@@ -29,6 +30,7 @@ import com.ecom.customerservice.repository.CustomerRepository;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
+@DirtiesContext
 class CustomerServiceTest {
 
 	@Mock
