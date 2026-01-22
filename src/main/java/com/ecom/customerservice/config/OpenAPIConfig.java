@@ -13,22 +13,25 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 @OpenAPIDefinition
 @Configuration
 public class OpenAPIConfig {
+	
+	private static final String CONTENT_TYPE="application/json";
+	private static final String DEFAULT="default";
 
 	@Bean
 	OpenAPI getOpenApi() {
 
 		ApiResponse badRequest = new ApiResponse().content(new io.swagger.v3.oas.models.media.Content().addMediaType(
-				"application/json", new io.swagger.v3.oas.models.media.MediaType().addExamples("default", new Example()
+				CONTENT_TYPE, new io.swagger.v3.oas.models.media.MediaType().addExamples(DEFAULT, new Example()
 						.value("{\"code\" : 400, \"status\" : \"Bad Request\", \"Message\" : \"Bad Request\"}"))));
 
 		ApiResponse internalServerError = new ApiResponse()
-				.content(new io.swagger.v3.oas.models.media.Content().addMediaType("application/json",
-						new io.swagger.v3.oas.models.media.MediaType().addExamples("default", new Example().value(
+				.content(new io.swagger.v3.oas.models.media.Content().addMediaType(CONTENT_TYPE,
+						new io.swagger.v3.oas.models.media.MediaType().addExamples(DEFAULT, new Example().value(
 								"{\"code\" : 500, \"status\" : \"InternalServerError\", \"Message\" : \"Bad Request\"}"))));
 
 		ApiResponse successfulResponse = new ApiResponse()
-				.content(new io.swagger.v3.oas.models.media.Content().addMediaType("application/json",
-						new io.swagger.v3.oas.models.media.MediaType().addExamples("default", new Example().value(
+				.content(new io.swagger.v3.oas.models.media.Content().addMediaType(CONTENT_TYPE,
+						new io.swagger.v3.oas.models.media.MediaType().addExamples(DEFAULT, new Example().value(
 								"{\"code\" : 200, \"status\" : \"Success\", \"Message\" : \"Request is successfull\"}"))));
 
 		Components components = new Components();

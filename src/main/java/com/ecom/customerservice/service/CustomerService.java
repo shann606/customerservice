@@ -5,8 +5,8 @@ import static com.ecom.customerservice.util.AesEncryptionUtil.decrypt;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -15,6 +15,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
+import com.ecom.customerservice.dto.AddressDTO;
 import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
@@ -42,7 +43,6 @@ public class CustomerService {
 	@Value("${crypto.secret-key}")
 	private String secretKey;
 
-	@Autowired
 	public CustomerService(CustomerRepository customerRepo, CustomMapper cMapper,
 			CustomerServiceFeignClient feignClient) {
 		this.customerRepo = customerRepo;
@@ -54,6 +54,7 @@ public class CustomerService {
 	public CustomerDTO saveCustomer(CustomerDTO customer) {
 
 		try {
+
 			Customer cus = customerRepo.saveAndFlush(cMapper.toCustomerEntity(customer));
 			return cMapper.toCustomerDTO(cus);
 		} catch (Exception e) {
@@ -64,7 +65,7 @@ public class CustomerService {
 
 	}
 
-    @CacheEvict(cacheNames = "customers" , allEntries = true)
+	@CacheEvict(cacheNames = "customers", allEntries = true)
 	public List<CustomersDTO.CustomerDTO> getUsers() {
 
 		log.info("Getting the users details");
@@ -168,49 +169,30 @@ public class CustomerService {
 
 		// patching customer data
 
-		if (customer.getName() != null) {
-			cust.setName(customer.getName());
-		}
-		if (customer.getFirtName() != null) {
-			cust.setFirtName(customer.getFirtName());
-		}
-		if (customer.getLastName() != null) {
-			cust.setLastName(customer.getLastName());
-		}
-		if (customer.getAge() != null) {
-			cust.setAge(customer.getAge());
-		}
-		if (customer.getGender() != null) {
-			cust.setGender(customer.getGender());
-		}
+		setValuesifPresent(customer.getName(), cust::setName);
+		setValuesifPresent(customer.getFirtName(), cust::setFirtName);
+		setValuesifPresent(customer.getLastName(), cust::setLastName);
+		setValuesifPresent(customer.getAge(), cust::setAge);
+		setValuesifPresent(customer.getGender(), cust::setGender);
+
 		// patching address data
+		if (!customer.getAddress().isEmpty()) {
 
-		customer.getAddress().stream().forEach((s) -> {
+			customer.getAddress().stream().forEach(s -> {
 
-			cust.getAddress().stream().filter(x -> x.getId().equals(s.getId())).forEach((y) -> {
+				cust.getAddress().stream().filter(x -> x.getId().equals(s.getId())).forEach(y -> {
 
-				if (s.getAddr1() != null) {
-					y.setAddr1(s.getAddr1());
-				}
-				if (s.getAddr2() != null) {
-					y.setAddr2(s.getAddr2());
-				}
-				if (s.getCity() != null) {
-					y.setCity(s.getCity());
-				}
-				if (s.getState() != null) {
-					y.setState(s.getState());
-				}
-				if (s.getCountry() != null) {
-					y.setCountry(s.getCountry());
-				}
-				if (s.getZipcode() != null) {
-					y.setZipcode(s.getZipcode());
-				}
+					setValuesifPresent(s.getAddr1(), y::setAddr1);
+					setValuesifPresent(s.getAddr2(), y::setAddr2);
+					setValuesifPresent(s.getCity(), y::setCity);
+					setValuesifPresent(s.getState(), y::setState);
+					setValuesifPresent(s.getCountry(), y::setCountry);
+					setValuesifPresent(s.getZipcode(), y::setZipcode);
+
+				});
 
 			});
-
-		});
+		}
 
 		Customer cust1 = customerRepo.save(cust);
 
@@ -224,6 +206,14 @@ public class CustomerService {
 		customerRepo.deleteById(id);
 
 		return "Successfully deleted";
+	}
+
+	private <T> void setValuesifPresent(T value, Consumer<T> setter) {
+
+		if (value != null) {
+			setter.accept(value);
+		}
+
 	}
 
 }

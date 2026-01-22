@@ -17,12 +17,11 @@ public interface CustomerServiceFeignClient {
 
 	@GetMapping("api/v1/products/recommendation/{productItemId}")
 	@CircuitBreaker(name = "productservice", fallbackMethod = "fallBackProductStr")
-	String getRecommendedProductsAsString(@PathVariable UUID productItemId) throws Exception;
+	String getRecommendedProductsAsString(@PathVariable UUID productItemId);
 
 	@GetMapping("api/v1/products/recommendation/{productItemId}")
 	@CircuitBreaker(name = "productservice", fallbackMethod = "fallBackProduct")
-	List<CustomerRecommendationDTO.ProductsDTO> getRecommendedProducts(@PathVariable UUID productItemId)
-			throws Exception;
+	List<CustomerRecommendationDTO.ProductsDTO> getRecommendedProducts(@PathVariable UUID productItemId);
 
 	default String fallBackProductStr(UUID productItemId, Throwable t) {
 
@@ -30,8 +29,7 @@ public interface CustomerServiceFeignClient {
 	}
 
 	default List<CustomerRecommendationDTO.ProductsDTO> fallBackProduct(UUID productItemId, Throwable t) {
-		List<CustomerRecommendationDTO.ProductsDTO> result = new ArrayList<CustomerRecommendationDTO.ProductsDTO>();
-		return result;
+		return new ArrayList<>();
 
 	}
 
