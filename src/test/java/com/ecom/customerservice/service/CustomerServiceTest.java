@@ -70,7 +70,7 @@ class CustomerServiceTest {
 
 	@Test
 	@Description("Customer : Saving customer testing")
-	void testSaveCustomer() throws Exception {
+	void testSaveCustomer()  {
 
 		cMapper.toCustomerEntity(customerService.saveCustomer(cMapper.toCustomerDTO(customer)));
 		verify(customerRepo, atLeastOnce()).saveAndFlush(customer);
@@ -79,7 +79,7 @@ class CustomerServiceTest {
 
 	@Test
 	@Description("Customer : getting customer by id ")
-	void testFindByid() throws Exception {
+	void testFindByid() {
 		cMapper.toCustomerEntity(customerService.findByid((UUID.fromString("b516f577-11da-424e-9ad0-bc23ab15df1b"))));
 		verify(customerRepo, atLeastOnce()).findById(UUID.fromString("b516f577-11da-424e-9ad0-bc23ab15df1b"));
 	}

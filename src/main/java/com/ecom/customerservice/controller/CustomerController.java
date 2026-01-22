@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,11 +31,13 @@ import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 import com.ecom.customerservice.dto.GenderEnum;
+import com.ecom.customerservice.dto.ValidationDTO;
 import com.ecom.customerservice.service.CustomerService;
-import com.ecom.customerservice.util.AesEncryptionUtil;
+import com.ecom.customerservice.validate.CustomerValidator;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 /**
  * Shan
@@ -44,20 +49,40 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 class CustomerController {
 
 	CustomerService customerService;
+	CustomerValidator customerValidator;
 
-	@Autowired
-	public CustomerController(CustomerService customerService) {
+	public CustomerController(CustomerService customerService, CustomerValidator customerValidator) {
 		this.customerService = customerService;
+		this.customerValidator = customerValidator;
+	}
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.addValidators(customerValidator);
 	}
 
 	@PostMapping("/createcustomer")
-	@Operation(description = "Creating Customer", responses = { @ApiResponse(responseCode = "400",description = "Bad Request" ),
+	@Operation(description = "Creating Customer", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<CustomersDTO.CustomerDTO> saveCustomer(@RequestBody CustomersDTO.CustomerDTO customer)
-			throws Exception {
+	ResponseEntity<Object> saveCustomer(@Valid @RequestBody CustomersDTO.CustomerDTO customer, BindingResult result)
+			 {
+		
+
+		if (result.hasErrors()) {
+			ValidationDTO res = null;
+
+			for (ObjectError s : result.getAllErrors()) {
+
+				res = new ValidationDTO("Failed", s.getCode(), s.getDefaultMessage());
+
+			}
+			return ResponseEntity.badRequest().body(res);
+
+		}
 
 		CustomersDTO.CustomerDTO customer1 = customerService.saveCustomer(customer);
 
@@ -75,10 +100,9 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<CustomersDTO> getCustomers() throws Exception {
+	ResponseEntity<CustomersDTO> getCustomers()  {
 
 		List<CustomerDTO> customer = customerService.getUsers();
-		System.out.println("printing key ==" + AesEncryptionUtil.generateKey());
 
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
 	}
@@ -90,7 +114,7 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<CustomersDTO.CustomerDTO> getUser(@PathVariable("id") UUID id) throws Exception {
+	ResponseEntity<CustomersDTO.CustomerDTO> getUser(@PathVariable("id") UUID id)  {
 
 		CustomersDTO.CustomerDTO customer = customerService.findByid(id);
 		return ResponseEntity.ok(customer);
@@ -105,7 +129,7 @@ class CustomerController {
 
 	})
 	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true) String name,
-			@RequestParam(name = "firstname", required = true) String firstName) throws Exception {
+			@RequestParam(name = "firstname", required = true) String firstName)  {
 
 		List<CustomerDTO> customer = customerService.findByUserName(name, firstName);
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
@@ -121,7 +145,7 @@ class CustomerController {
 	})
 	ResponseEntity<CustomerRecommendationDTO> getRecommendations(
 			@RequestParam(name = "customerId", required = true) UUID customerId,
-			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception {
+			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception  {
 
 		return ResponseEntity.ok(customerService.findCustomerProduct(customerId, productItemId));
 
@@ -142,13 +166,14 @@ class CustomerController {
 	}
 
 	@PatchMapping("/patchcustomer")
-	@Operation(description = "Patching customer", responses = { @ApiResponse(responseCode = "400", description = "Bad Request"),
+	@Operation(description = "Patching customer", responses = {
+			@ApiResponse(responseCode = "400", description = "Bad Request"),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error"),
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
 	ResponseEntity<CustomerDTO> patchCustomer(@RequestParam(name = "id", required = true) UUID customerId,
-			@RequestBody CustomerDTO customer) throws Exception {
+			@RequestBody CustomerDTO customer)  {
 
 		return new ResponseEntity<>(customerService.patchCustomerData(customerId, customer), HttpStatus.ACCEPTED);
 	}
@@ -161,7 +186,7 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id) throws Exception {
+	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id)  {
 
 		return new ResponseEntity<>(customerService.deleteCustomer(id), HttpStatus.NO_CONTENT);
 	}
