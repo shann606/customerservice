@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ecom.customerservice.dto.AddressDTO;
@@ -70,7 +71,7 @@ public class CustomerService {
 
 		log.info("Getting the users details");
 
-		List<Customer> cus = customerRepo.findAll();
+		List<Customer> cus = customerRepo.findAll(Sort.by("name").ascending());
 
 		return cMapper.toListCustomerDTO(cus);
 	}
@@ -174,7 +175,7 @@ public class CustomerService {
 		setValuesifPresent(customer.getLastName(), cust::setLastName);
 		setValuesifPresent(customer.getAge(), cust::setAge);
 		setValuesifPresent(customer.getGender(), cust::setGender);
-
+		setValuesifPresent(customer.getEmailId(), cust::setEmailId);
 		// patching address data
 		if (!customer.getAddress().isEmpty()) {
 

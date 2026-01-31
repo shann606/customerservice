@@ -28,6 +28,8 @@ public class CustomersDTO {
 		private String firtName;
 		private String lastName;
 		private GenderEnum gender;
+		private String emailId;
+		private String fullname;
 		private List<AddressDTO> address;
 
 	}

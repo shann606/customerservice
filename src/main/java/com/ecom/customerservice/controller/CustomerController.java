@@ -190,7 +190,8 @@ class CustomerController {
 
 		return new ResponseEntity<>(customerService.deleteCustomer(id), HttpStatus.NO_CONTENT);
 	}
-
+     
+	@SuppressWarnings("unused")
 	private CustomersDTO getData() {
 
 		List<AddressDTO> list = new ArrayList<>();

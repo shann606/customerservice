@@ -3,6 +3,9 @@ package com.ecom.customerservice.entity;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.NaturalId;
+
 import com.ecom.customerservice.dto.GenderEnum;
 
 import jakarta.persistence.CascadeType;
@@ -34,6 +37,11 @@ public class Customer {
 	private String firtName;
 	private String lastName;
 	private GenderEnum gender;
+	@NaturalId(mutable = true)
+	private String emailId;
+	@Formula("FIRT_NAME || ' ' || LAST_NAME")
+	private String fullname;
+   
 	
 	@OneToMany(orphanRemoval = true,cascade = CascadeType.ALL)
 	@JoinColumn(name = "customer_id", nullable = false)
