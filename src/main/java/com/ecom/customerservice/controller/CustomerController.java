@@ -48,8 +48,8 @@ import jakarta.validation.Valid;
 
 class CustomerController {
 
-	CustomerService customerService;
-	CustomerValidator customerValidator;
+	private CustomerService customerService;
+	private CustomerValidator customerValidator;
 
 	public CustomerController(CustomerService customerService, CustomerValidator customerValidator) {
 		this.customerService = customerService;
@@ -68,9 +68,7 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<Object> saveCustomer(@Valid @RequestBody CustomersDTO.CustomerDTO customer, BindingResult result)
-			 {
-		
+	ResponseEntity<Object> saveCustomer(@Valid @RequestBody CustomersDTO.CustomerDTO customer, BindingResult result) {
 
 		if (result.hasErrors()) {
 			ValidationDTO res = null;
@@ -100,7 +98,7 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<CustomersDTO> getCustomers()  {
+	ResponseEntity<CustomersDTO> getCustomers() {
 
 		List<CustomerDTO> customer = customerService.getUsers();
 
@@ -114,7 +112,7 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<CustomersDTO.CustomerDTO> getUser(@PathVariable("id") UUID id)  {
+	ResponseEntity<CustomersDTO.CustomerDTO> getUser(@PathVariable("id") UUID id) {
 
 		CustomersDTO.CustomerDTO customer = customerService.findByid(id);
 		return ResponseEntity.ok(customer);
@@ -129,7 +127,7 @@ class CustomerController {
 
 	})
 	ResponseEntity<CustomersDTO> findUser(@RequestParam(name = "name", required = true) String name,
-			@RequestParam(name = "firstname", required = true) String firstName)  {
+			@RequestParam(name = "firstname", required = true) String firstName) {
 
 		List<CustomerDTO> customer = customerService.findByUserName(name, firstName);
 		return ResponseEntity.ok(CustomersDTO.builder().customers(customer).build());
@@ -145,7 +143,7 @@ class CustomerController {
 	})
 	ResponseEntity<CustomerRecommendationDTO> getRecommendations(
 			@RequestParam(name = "customerId", required = true) UUID customerId,
-			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception  {
+			@RequestParam(name = "productItemid", required = true) UUID productItemId) throws Exception {
 
 		return ResponseEntity.ok(customerService.findCustomerProduct(customerId, productItemId));
 
@@ -173,7 +171,7 @@ class CustomerController {
 
 	})
 	ResponseEntity<CustomerDTO> patchCustomer(@RequestParam(name = "id", required = true) UUID customerId,
-			@RequestBody CustomerDTO customer)  {
+			@RequestBody CustomerDTO customer) {
 
 		return new ResponseEntity<>(customerService.patchCustomerData(customerId, customer), HttpStatus.ACCEPTED);
 	}
@@ -186,11 +184,11 @@ class CustomerController {
 			@ApiResponse(responseCode = "200", description = "Success")
 
 	})
-	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id)  {
+	ResponseEntity<String> deleteCustomer(@PathVariable(name = "id", required = true) UUID id) {
 
 		return new ResponseEntity<>(customerService.deleteCustomer(id), HttpStatus.NO_CONTENT);
 	}
-     
+
 	@SuppressWarnings("unused")
 	private CustomersDTO getData() {
 
