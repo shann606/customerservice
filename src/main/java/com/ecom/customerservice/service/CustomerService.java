@@ -16,7 +16,6 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.ecom.customerservice.dto.AddressDTO;
 import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 import com.ecom.customerservice.dto.CustomersDTO;
 import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;

@@ -2,6 +2,7 @@ package com.ecom.customerservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.client.RestTemplate;
 
 import feign.Capability;
@@ -9,6 +10,7 @@ import feign.micrometer.MicrometerCapability;
 import io.micrometer.core.instrument.MeterRegistry;
 
 @Configuration
+
 public class AppConfig {
 
 	@Bean
@@ -16,10 +18,10 @@ public class AppConfig {
 
 		return new RestTemplate();
 	}
-	
+
 	@Bean
-    public Capability capability(MeterRegistry meterRegistry) {
-        return new MicrometerCapability(meterRegistry);
-    }
+	Capability capability(MeterRegistry meterRegistry) {
+		return new MicrometerCapability(meterRegistry);
+	}
 
 }
