@@ -32,7 +32,7 @@
 		<spring-cloud.version>2025.0.0</spring-cloud.version>
 		<logstash.version>8.0</logstash.version>
 		<jib-build-plugin>3.5.1</jib-build-plugin>
-		<eh-cache>3.10.0</eh-cache>
+		<eh-cache>3.10.9</eh-cache>
 		<swagger-v>2.8.14</swagger-v>
 	</properties>
 	<dependencies>
@@ -122,12 +122,12 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
-		 <!-- Resilience4j -->
-	    <dependency>
-	        <groupId>org.springframework.cloud</groupId>
-	        <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
-	    </dependency>
-	    <dependency>
+		<!-- Resilience4j -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
@@ -142,13 +142,19 @@
 			<groupId>javax.cache</groupId>
 			<artifactId>cache-api</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>${swagger-v}</version>
 		</dependency>
-	    
+		<dependency>
+			<groupId>org.wiremock.integrations</groupId>
+			<artifactId>wiremock-spring-boot</artifactId>
+			<version>4.0.9</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -1,6 +1,5 @@
 package com.ecom.customerservice.service;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -136,10 +135,7 @@ class CustomerServiceTest {
 
 	}
 
-	@Test
-	void testFindByUserName() {
 
-	}
 
 	@Test
 	void testUpdateCustomer() throws Exception {
@@ -157,7 +153,7 @@ class CustomerServiceTest {
 	}
 
 	@Test
-	void testPatchCustomerData() throws Exception {
+	void testPatchCustomerData() {
 
 		when(customerRepo.save(customer)).thenReturn(customer);
 

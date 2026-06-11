@@ -97,7 +97,7 @@ public class CustomerService {
 
 	private List<CustomerRecommendationDTO.ProductsDTO> getProductsData(UUID productItemId) throws Exception {
 
-		List<CustomerRecommendationDTO.ProductsDTO> result;
+		List<CustomerRecommendationDTO.ProductsDTO> result = null;
 		ObjectMapper obj;
 
 		if (!secretKey.isBlank()) {
@@ -107,7 +107,7 @@ public class CustomerService {
 			if (data.startsWith("$")) {
 				data = decrypt(data, secretKey);
 			} else {
-				throw new Exception("Downstream application is down please try later....");
+				throw new IllegalArgumentException("Downstream application is down please try later....");
 
 			}
 			log.info(" inner service is called as secure channel after decrypt" + data);
@@ -116,7 +116,14 @@ public class CustomerService {
 			});
 		} else {
 			log.info(" inner service is called as without secure channel");
+			try {
 			result = feignClient.getRecommendedProducts(productItemId);
+			
+			log.info("are we hitting correctly" + result);
+			
+			}catch (Exception e) {
+				log.error(e.toString());
+			}
 		}
 		return result;
 
