@@ -51,6 +51,8 @@ public class CustomerRecommendationDTO implements Serializable {
 		private UUID productItemId;
 		private String brand;
 		private String description;
+		@JsonIgnore
+		private int quantity;
 		private BigDecimal price;
 		private boolean available;
 		@JsonIgnore

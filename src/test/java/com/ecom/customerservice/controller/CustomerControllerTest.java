@@ -32,7 +32,6 @@ import com.ecom.customerservice.dto.CustomersDTO.CustomerDTO;
 import com.ecom.customerservice.dto.GenderEnum;
 import com.ecom.customerservice.service.CustomerService;
 import com.ecom.customerservice.validate.CustomerValidator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest
@@ -139,7 +138,7 @@ class CustomerControllerTest {
 	}
 
 	@Test
-	void testPatchCustomer() throws JsonProcessingException, Exception {
+	void testPatchCustomer() throws  Exception {
 
 		when(customerService.patchCustomerData(any(UUID.class), any(CustomersDTO.CustomerDTO.class)))
 				.thenReturn(customer);

@@ -12,14 +12,14 @@ import com.ecom.customerservice.dto.CustomerRecommendationDTO;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
-@FeignClient(name = "productservice")
+@FeignClient(name = "productservice" )
 public interface CustomerServiceFeignClient {
 
-	@GetMapping("api/v1/products/recommendation/{productItemId}")
+	@GetMapping("api/v1/categories/recommendation/{productItemId}")
 	@CircuitBreaker(name = "productservice", fallbackMethod = "fallBackProductStr")
 	String getRecommendedProductsAsString(@PathVariable UUID productItemId);
 
-	@GetMapping("api/v1/products/recommendation/{productItemId}")
+	@GetMapping("api/v1/categories/recommendation/{productItemId}")
 	@CircuitBreaker(name = "productservice", fallbackMethod = "fallBackProduct")
 	List<CustomerRecommendationDTO.ProductsDTO> getRecommendedProducts(@PathVariable UUID productItemId);
 
